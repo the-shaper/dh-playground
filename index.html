@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASCII Sound Drawer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script type="module" crossorigin src="/ascii-sound-drawer/assets/index-CQlCFpSi.js"></script>
+  <link rel="stylesheet" crossorigin href="/ascii-sound-drawer/assets/index-JTSdG_t7.css">
+</head>
+<body class="flex flex-col items-center min-h-screen p-2 md:p-4">
+
+    <div id="start-prompt" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+        <button id="start-btn" class="text-4xl font-bold text-white bg-green-600 hover:bg-green-500 px-10 py-6 rounded-xl shadow-lg">Click to Start</button>
+    </div>
+
+    <h1 class="text-3xl md:text-4xl font-bold text-center mb-4" style="font-family: 'Ubuntu Mono', monospace;">ASCII Sound Drawer</h1>
+
+    <div class="w-full max-w-screen-xl flex-grow flex flex-col lg:flex-row gap-4">
+        
+        <div class="lg:w-64 flex-shrink-0 flex flex-col space-y-4 p-4 bg-gray-800/50 rounded-lg border-2 border-gray-700">
+            <div class="flex items-center justify-between">
+                <label for="select-mode-toggle" class="font-bold">Select Mode:</label>
+                <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                    <input type="checkbox" name="select-mode-toggle" id="select-mode-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
+                    <label for="select-mode-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-600 cursor-pointer"></label>
+                </div>
+            </div>
+             <div class="flex items-center justify-between">
+                <label for="word-mode-toggle" class="font-bold">Word Mode:</label>
+                <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                    <input type="checkbox" name="word-mode-toggle" id="word-mode-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
+                    <label for="word-mode-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-600 cursor-pointer"></label>
+                </div>
+            </div>
+            <div class="flex items-center justify-between">
+                <label for="overwrite-toggle" class="font-bold">Overwrite:</label>
+                <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                    <input type="checkbox" name="overwrite-toggle" id="overwrite-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
+                    <label for="overwrite-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-600 cursor-pointer"></label>
+                </div>
+            </div>
+            <hr class="border-gray-600"/>
+            <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                    <label for="tempo-toggle" class="font-bold">Sequencer Mode:</label>
+                    <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                        <input type="checkbox" name="tempo-toggle" id="tempo-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
+                        <label for="tempo-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-600 cursor-pointer"></label>
+                    </div>
+                </div>
+                <div id="tempo-controls" class="space-y-2 hidden">
+                    <div class="flex items-center justify-between pl-2">
+                        <label for="follow-mouse-toggle" class="font-bold text-sm">Follow Mouse:</label>
+                        <div class="relative inline-block w-10 mr-2 align-middle select-none">
+                            <input type="checkbox" name="follow-mouse-toggle" id="follow-mouse-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
+                            <label for="follow-mouse-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-600 cursor-pointer"></label>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="bpm-slider" class="block font-bold">BPM: <span id="bpm-value">120</span></label>
+                        <input type="range" id="bpm-slider" min="60" max="220" value="120" class="w-full">
+                    </div>
+                    <div>
+                        <label for="rate-selector" class="block font-bold">Rate:</label>
+                        <select id="rate-selector" class="w-full bg-gray-900 border border-gray-700 rounded-md p-1">
+                            <option value="4n">1/4</option>
+                            <option value="8n" selected>1/8</option>
+                            <option value="16n">1/16</option>
+                            <option value="32n">1/32</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <hr class="border-gray-600"/>
+            <div class="color-picker-wrapper">
+                <label for="bgColorPicker" class="font-bold">BG Color:</label>
+                <input type="color" id="bgColorPicker" value="#d9d9d9">
+            </div>
+            <div class="color-picker-wrapper">
+                <label for="textColorPicker" class="font-bold">Text Color:</label>
+                <input type="color" id="textColorPicker" value="#2d2a2a">
+            </div>
+            <hr class="border-gray-600"/>
+            <div>
+                <label for="customText" class="block mb-2 font-bold">Custom Text:</label>
+                <textarea id="customText" rows="4" class="w-full bg-gray-900 border-2 border-gray-700 rounded-lg p-2 text-white placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Type here..."></textarea>
+            </div>
+            <button id="restartSequenceBtn" class="btn btn-info">Restart Sequence</button>
+             <hr class="border-gray-600"/>
+            <div class="space-y-2">
+                <button id="changePatternBtn" class="btn btn-primary">Change Sound</button>
+                <button id="clearBtn" class="btn btn-secondary">Clear Canvas</button>
+                <button id="saveBtn" class="btn btn-success">Export as PNG</button>
+            </div>
+            <div id="patternInfo" class="text-center text-gray-400 h-10 flex items-center justify-center"></div>
+        </div>
+
+        <div class="flex-grow flex flex-col gap-2 items-center">
+             <div id="canvas-wrapper" class="w-full flex-grow relative h-[75vh]">
+                <div id="canvas-container" class="w-full h-full rounded-lg shadow-inner overflow-hidden border-2 border-gray-700" style="background-color: #d9d9d9; cursor: text;">
+                    <pre id="canvas" class="w-full h-full"></pre>
+                </div>
+                <div id="selection-box" class="hidden"></div>
+            </div>
+            <div id="ratio-toolbar" class="flex flex-wrap justify-center gap-2 p-2 bg-gray-800/50 rounded-lg">
+                <button class="ratio-btn active" data-ratio="auto">Auto</button>
+                <button class="ratio-btn" data-ratio="1/1">1:1</button>
+                <button class="ratio-btn" data-ratio="16/9">16:9</button>
+                <button class="ratio-btn" data-ratio="9/16">9:16</button>
+                <button class="ratio-btn" data-ratio="4/3">4:3</button>
+                <button class="ratio-btn" data-ratio="3/4">3:4</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
